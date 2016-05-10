@@ -23,8 +23,9 @@ exports.login = function (req, res) {
             password: req.body.password,
             _id:1
     };
+    var toCheck = process.env.ADMIN_PASSWORD | 'qwert';
 
-    if (req.body.password != 'qwert')
+    if (req.body.password != toCheck)
     {
       return res.status(401).send({message: 'Wrong email and/or password'});
     }
