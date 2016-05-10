@@ -1,43 +1,38 @@
-var logger          = require('morgan'),
-    cors            = require('cors'),
-    http            = require('http'),
-    express         = require('express'),
-    errorhandler    = require('errorhandler'),
-    dotenv          = require('dotenv'),
-    bodyParser      = require('body-parser');
+'use strict';
 
+
+// Set default node environment to development
+
+
+var express = require('express');
+var compression = require('compression');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var path = require('path');
+var config = require('./config');
+
+// Setup server
 var app = express();
+var server = require('http').createServer(app);
 
-dotenv.load();
-
-// Parsers
-// old version of line
-// app.use(bodyParser.urlencoded());
-// new version of line
-app.use(bodyParser.urlencoded({ extended: true }));
+//config express and routing
+ /*var env = app.get('env');*/
+app.use(compression());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(methodOverride());
 
-app.use(function(err, req, res, next) {
-  if (err.name === 'StatusError') {
-    res.send(err.status, err.message);
-  } else {
-    next(err);
-  }
+
+require('./routes')(app);
+
+//var port = process.env.PORT;
+var port = config.port;
+var server = app.listen(port, function () {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log("host "  + host);
+    console.log('Express Server listening at http://%s:%s in %s mode', host, port, app.get('env'))
 });
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(logger('dev'));
-  app.use(errorhandler())
-}
-
-app.use(require('./anonymous-routes'));
-app.use(require('./protected-routes'));
-app.use(require('./user-routes'));
-
-var port = process.env.PORT || 3001;
-
-http.createServer(app).listen(port, function (err) {
-  console.log('listening in http://localhost:' + port);
-});
-
+// Expose app
+exports = module.exports = app;
