@@ -23,7 +23,7 @@ exports.login = function (req, res) {
             password: req.body.password,
             _id:1
     };
-    var toCheck = process.env.ADMIN_PASSWORD | 'qwert';
+    var toCheck = process.env.ADMIN_PASSWORD || 'qwert';
 
     if (req.body.password != toCheck)
     {
