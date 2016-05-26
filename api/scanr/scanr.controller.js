@@ -11,8 +11,16 @@ exports.index = function(req, res) {
 
 exports.parse = function(req, res) {
   console.log(req.file);
-  //var token = process.env.SCANR_TOKEN;
-//   fs.readFile(req.files.document.path, function (err, data) {
+  var token = process.env.SCANR_TOKEN;
+  var scanr = require("./scanrapi")(token, {lang: 'swe'});
+ 
+  scanr.ocr(fs.createReadStream(req.file.path), function (err, text){
+    return res.status(200).json(text);
+  });
+  
+  
+  // fs.readFile(req.file.path, function (err, data) {
+     
 //   var newPath = __dirname + "/uploads/" + req.files.document.name;
 //   fs.writeFile(newPath, data, function (err) {
 //     if(err)
@@ -23,7 +31,7 @@ exports.parse = function(req, res) {
 //     res.redirect("back");
 //   });
 // });
-  return res.status(200).json("file uploaded");
+//return res.status(200).json("file uploaded");
 };
 
 function handleError(res, err) {
