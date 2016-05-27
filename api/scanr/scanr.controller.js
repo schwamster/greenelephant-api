@@ -12,7 +12,7 @@ exports.index = function(req, res) {
 exports.parse = function(req, res) {
   console.log(req.file);
   var token = process.env.SCANR_TOKEN;
-  var scanr = require("./scanrapi")(token, {lang: 'swe'});
+  var scanr = require("./scanrapi")(token, {lang: 'eng'});
  
   scanr.ocr(fs.createReadStream(req.file.path), function (err, text){
     return res.status(200).json(text);
