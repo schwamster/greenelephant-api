@@ -6,6 +6,7 @@ var authUtils = require('../../auth/authUtils');
 var multer = require('multer');
 
 var router = express.Router();
+router.get('/', controller.index);
 router.use(authUtils.ensureAuthenticated); //auth only appied for following paths, not the paths above
 
 var storage = multer.diskStorage({
@@ -25,7 +26,6 @@ var upload = multer(
   });
 
 
-router.get('/', controller.index);
 router.post('/parse',upload.single('document'), controller.parse);
 // router.post('/parse', controller.parse);
 // router.get('/:id', controller.show);
